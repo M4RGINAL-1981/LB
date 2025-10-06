@@ -1,0 +1,48 @@
+import matplotlib.pyplot as plt
+import numpy as np
+import os
+
+class F:
+    def __call__(self, x):
+        return x**3
+    def __str__(self):
+        return "x**3"
+    
+
+def plot(A: int, B: int, N: int, f):
+
+    # Данные
+    x = np.linspace(A, B, N) # Создаёт массив N равноудалённых точек от A до B
+    fx = f(x) # Создаёт массив значений функции от массива x
+    
+
+    # Создание графика
+    fig = plt.figure(figsize=(8,10)) # Размер окна в дюймах (8 на 10)
+
+    #ax = fig.add_subplot(111)
+    plt.plot(x,f(x),label="Кубическая функция", linestyle='--', color="Magenta") # Построение 
+
+    plt.title('График кубической функции',fontsize=16) # Заголовок
+
+    plt.xlabel("X", fontsize=15) # Подпись оси абцисс
+    plt.ylabel("Y", fontsize=15) # Подпись оси ординат
+    plt.grid(True) # Включение сетки
+    plt.legend() # Включение отображения легенды
+    
+    save_folder = '/home/thm/VSCODE/Python/source'                    # Путь для сохранения
+    os.makedirs(save_folder,exist_ok=True)                            # Создание папки
+    plt.savefig(os.path.join(save_folder, 'graph.png'), dpi=300)      # Сохранения графика
+    plt.show()                                                        # Показ графика в окне
+
+
+
+def main():
+    a = -10           # Начальная точка графика по оси абцисс
+    b = 10            # Конечная точка графика по оси абцисс
+    N = 500           # Кол-во точек для построения
+    f = F()           # Функция которую нужно визуализировать
+    plot(a,b, N, f)   # Работа с функцией
+
+
+if __name__ == "__main__":
+    main()
