@@ -38,7 +38,7 @@ if __name__ == "__main__":
     B = 1
     C = 0
     D = 1
-    N = int(1e11)
+    N = int(1e12)
     f = F()
 
     start = time.time()
