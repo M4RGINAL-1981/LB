@@ -38,7 +38,7 @@ if __name__ == "__main__":
     B = 1
     C = 0
     D = 1
-    N = int(1e12)
+    N = int(1e11)
     f = F()
 
     start = time.time()
@@ -49,3 +49,5 @@ if __name__ == "__main__":
 
     print(f"Прошло {round((end - start) / 3600, 2)} часа")
     #print(f"Ограничивающий прямоугольник: A: {A}, B: {B}, C: {C}, D: {D}. Функция: {f}. Кол-во точек N: {N}. Площадь: {MonteKarloGeometric(A, B, C, D, f, N)}")
+
+    p = mp.Process(target = MonteKarloSUM())

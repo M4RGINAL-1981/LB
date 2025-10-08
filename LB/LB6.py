@@ -1,12 +1,10 @@
-import seaborn as sns
+import seaborn as sb
 import numpy as np
-import matplotlib.pyplot as plt
 import pandas as pd
+import matplotlib as plt
+import jinja2 as Jn
+import os
 
 
 if __name__ == "__main__":
-    # Загрузка данных о Титанике
-    titanic_df = sns.load_dataset('titanic')
-
-    # Посмотрим на первые 5 строк таблицы
-    print(titanic_df.head())
+    pass
