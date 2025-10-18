@@ -2,6 +2,7 @@ import numpy as np
 import multiprocessing
 import matplotlib.pyplot as plt
 import math
+import time
 
 class F:
     def __init__(self):
@@ -11,7 +12,7 @@ class F:
 
 Square = math.pi / 2
 Poins_count = 10 ** 7
-Iterations_count = 100
+Iterations_count = 3500
 Processes_count = multiprocessing.cpu_count()
 
 f = F()
@@ -72,6 +73,7 @@ def plot(N, S, S1, S2):
 
 if __name__ == "__main__":
 
+    start = time.time()
     with multiprocessing.Pool(Processes_count) as pool:
         Results = pool.map(process, range(Processes_count))
 
@@ -100,8 +102,13 @@ if __name__ == "__main__":
         S1.append(S_sum + sig)
         S2.append(S_sum - sig)
 
-    print(f"Точная площадь: {Square:.6f}")
-    print(f"Вычисленная площадь: {S[-1]:.6f}")
-    print(f"Относительная ошибка: {abs(S[-1]-Square)/Square*100:.4f}%")
-    
+    end = time.time()
+
+    print(f"Точная площадь: {Square:.9f}")
+    print(f"Вычисленная площадь: {S[-1]:.9f}")
+    print(f"Относительная ошибка: {abs(S[-1]-Square)/Square*100:.9f}%")
+
+    time = round((end - start) / 60, 2)
+    print(f"Время на вычисление: {time}")
+
     plot(N, S, S1, S2)
