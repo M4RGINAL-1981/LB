@@ -1,44 +1,43 @@
 import numpy as np
-import math
-import matplotlib.pyplot as plt
 import multiprocessing
-import time 
+import matplotlib.pyplot as plt
+import math
 
-class F:
-    def __call__(self, x):
-        return np.sqrt(1 - x**2)
-    
-    def S(self):
-        return math.pi / 2
-    
-    def __str__(self):
-        return "sqrt(1 - x**2)"
-    
+Square = math.pi / 2
+Poins_count = 10 ** 7
+Iterations_count = 100
+Processes_count = 36
 
-def MonteKarloGeo(a: int, b: int, c: int, d: int, f, N: int):
-    curva_x = np.random.uniform(a, b, N)
-    curva_y = np.random.uniform(c, d, N)
-    curva_G = curva_y <= f(curva_x)
-    return (b - a) * (d - c) * np.mean(curva_G)
 
-def process(a: int, b: int, c: int, d: int, f, N: int):
+def monte_carlo_iteration():
+    """
+    Реализует метод Монте-Карло.
+    Returns:
+        s (float): посчитанная площадь
+    """
+    x = np.random.uniform(-1, 1, Poins_count)
+    y = np.random.uniform(0, 1, Poins_count)
+    points_check = x**2 + y**2 <= 1
+    count = np.sum(points_check)
+    s = 2 * count / Poins_count
+    return s
+
+
+def process(_):
     """
     Выполняет серию итераций одного процесса и собирает результаты нескольких итераций.
     Returns:
         result (list): список значений s для каждой итерации.
     """
     np.random.seed(42)
-    if(N < 1e8):
-        return MonteKarloGeo(a, b, c, d, f, N)
-    else:     
-        result = []
-        for _ in range(int(1e8), int(N + 1e8), int(1e8)):
-            s = MonteKarloGeo(a, b, c, d, f, int(1e8))
-            result.append(s)
-        return result
+    result = []
+    for _ in range(Iterations_count):
+        s = monte_carlo_iteration()
+        result.append(s)
+    return result
 
 
-def plot(N, S, S1, S2, f):
+def plot(N, S, S1, S2):
     """
     Строит график зависимости оценки площади от количества точек.
     Args:
@@ -50,7 +49,7 @@ def plot(N, S, S1, S2, f):
     plt.plot(N, S, marker='o', label='Посчитаная площадь')
     plt.plot(N, S1, marker='+', linestyle='--', label='Ошибка +')
     plt.plot(N, S2, marker='+', linestyle='--', label='Ошибка -')
-    plt.axhline(f.S(), linestyle='--', label='Настоящая Площадь')
+    plt.axhline(Square, linestyle='--', label='Настоящая Площадь')
     plt.xscale('log')
     plt.xlabel('Количество точек')
     plt.ylabel('Площадь')
@@ -59,17 +58,7 @@ def plot(N, S, S1, S2, f):
     plt.title('Зависимость оценки площади от количества точек')
     plt.show()
 
-
 if __name__ == "__main__":
-    A = -1
-    B = 1
-    C = 0
-    D = 1
-    Processes_count = 36
-    N_values = 1e8
-    Time_values = []
-    Results_values = []
-    f = F()
 
     with multiprocessing.Pool(Processes_count) as pool:
         Results = pool.map(process, range(Processes_count))
@@ -84,17 +73,19 @@ if __name__ == "__main__":
     S1 = []
     S2 = []
 
+    Total_points = 0
     P_sum = 0
 
     for i in range(len(Item)):
+        Total_points += Poins_count
         P_sum += Item[i]
         S_sum = P_sum / (i + 1)
-        p = S_sum / 4
-        sig = 4 * np.sqrt(p * (1 - p) / N_values)
+        p = S_sum / 2
+        sig = 2 * np.sqrt(p * (1 - p) / Total_points)
 
-        N.append(N_values)
+        N.append(Total_points)
         S.append(S_sum)
         S1.append(S_sum + sig)
         S2.append(S_sum - sig)
 
-    plot(N, S, S1, S2, f)
+    plot(N, S, S1, S2)
