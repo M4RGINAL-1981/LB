@@ -12,7 +12,7 @@ class F:
 
 Square = math.pi / 2
 Poins_count = 10 ** 7
-Iterations_count = 10
+Iterations_count = 20000
 Processes_count = multiprocessing.cpu_count()
 
 f = F()
